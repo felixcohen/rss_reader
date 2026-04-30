@@ -1,0 +1,34 @@
+plugins:
+  - rubocop-sequel
+  - rubocop-rspec
+
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.2
+  SuggestExtensions: false
+  Exclude:
+    - 'db/migrations/**/*'
+    - 'vendor/**/*'
+
+Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: true
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+
+Metrics/MethodLength:
+  Exclude:
+    - 'app/models/**/*'
+
+RSpec/ExampleLength:
+  Max: 20
+
+RSpec/DescribeClass:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false

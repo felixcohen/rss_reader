@@ -27,7 +27,7 @@ RSpec.configure do |config|
     DatabaseCleaner[:sequel].tap { |c| c.db = DB }.strategy = :transaction
   end
 
-  config.around(:each) do |example|
+  config.around do |example|
     DatabaseCleaner[:sequel].cleaning { example.run }
   end
 

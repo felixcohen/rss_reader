@@ -5,9 +5,9 @@ class FeedGroup < Sequel::Model
   plugin :validation_helpers
 
   many_to_many :feeds,
-    join_table: :feed_group_memberships,
-    left_key: :group_id,
-    right_key: :feed_id
+               join_table: :feed_group_memberships,
+               left_key: :group_id,
+               right_key: :feed_id
 
   def validate
     super

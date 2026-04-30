@@ -6,10 +6,10 @@ class Feed < Sequel::Model
 
   one_to_many :feed_items, order: Sequel.desc(:published_at)
   many_to_many :groups,
-    class: :FeedGroup,
-    join_table: :feed_group_memberships,
-    left_key: :feed_id,
-    right_key: :group_id
+               class: :FeedGroup,
+               join_table: :feed_group_memberships,
+               left_key: :feed_id,
+               right_key: :group_id
 
   def validate
     super
