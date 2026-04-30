@@ -23,8 +23,11 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     Sequel::Migrator.run(DB, File.expand_path('../db/migrations', __dir__))
+    FactoryBot.definition_file_paths = %w[spec/factories spec/support]
     FactoryBot.find_definitions
-    DatabaseCleaner[:sequel].tap { |c| c.db = DB }.strategy = :transaction
+    cleaner = DatabaseCleaner[:sequel].tap { |c| c.db = DB }
+    cleaner.strategy = :deletion
+    cleaner.clean_with(:deletion)
   end
 
   config.around do |example|

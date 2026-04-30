@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
+  to_create(&:save)
+
   factory :feed do
     sequence(:url) { |n| "https://example#{n}.com/feed.xml" }
     title { 'Example Feed' }

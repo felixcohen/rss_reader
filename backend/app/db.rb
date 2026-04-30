@@ -8,3 +8,4 @@ db_url = ENV.fetch('DATABASE_URL', "sqlite://#{File.expand_path('../db/developme
 
 DB = Sequel.connect(db_url, loggers: ENV['LOG_LEVEL'] == 'debug' ? [Logger.new($stdout)] : [])
 DB.extension(:pagination)
+DB.run('PRAGMA foreign_keys = ON') if db_url.start_with?('sqlite')
