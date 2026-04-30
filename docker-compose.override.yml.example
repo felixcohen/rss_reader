@@ -1,0 +1,28 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      target: builder
+    command: bundle exec rerun -- rackup config.ru -p 9292
+    environment:
+      DATABASE_URL: sqlite:///data/reader.db
+      RACK_ENV: development
+      LOG_LEVEL: debug
+    volumes:
+      - ./backend:/app
+      - db_data:/data
+    ports:
+      - "9292:9292"
+
+  frontend:
+    image: node:20-alpine
+    working_dir: /app
+    command: npm run dev -- --host
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+volumes:
+  db_data:
