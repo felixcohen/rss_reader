@@ -10,7 +10,11 @@ module Reader
     end
 
     post '/feeds' do
-      body = JSON.parse(request.body.read)
+      body = begin
+        JSON.parse(request.body.read)
+      rescue JSON::ParserError
+        halt 400, json(error: 'Request body must be valid JSON')
+      end
       url = body['url']&.strip
       halt 422, json(error: 'url is required') if url.nil? || url.empty?
 
@@ -31,6 +35,7 @@ module Reader
       status 204
     end
 
+    # Keep export above any GET /feeds/:id to prevent route shadowing
     get '/feeds/export' do
       status 501
       json error: 'not implemented'

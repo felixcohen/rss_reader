@@ -71,8 +71,6 @@ RSpec.describe 'Feeds routes' do
     let(:opml_body) { File.read(File.join(__dir__, '../fixtures/sample.opml')) }
 
     before do
-      stub_request(:get, 'https://example.com/feed.xml')
-        .to_return(status: 200, body: rss_body, headers: { 'Content-Type' => 'application/rss+xml' })
       stub_request(:get, 'https://another.com/rss').to_return(status: 200, body: rss_body)
       stub_request(:get, 'https://ungrouped.com/feed').to_return(status: 200, body: rss_body)
     end
