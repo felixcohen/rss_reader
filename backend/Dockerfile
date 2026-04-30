@@ -9,11 +9,10 @@ RUN bundle config set --local without development:test \
 # Stage 2: runtime
 FROM ruby:3.2-slim AS runtime
 RUN apt-get update && apt-get install -y libsqlite3-0 curl && rm -rf /var/lib/apt/lists/*
-RUN useradd -m -s /bin/sh app
 WORKDIR /app
 COPY --from=builder /usr/local/bundle /usr/local/bundle
 COPY . .
-RUN mkdir -p db && chown -R app:app /app
-USER app
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 EXPOSE 9292
-CMD ["bundle", "exec", "puma", "-p", "9292", "config.ru"]
+ENTRYPOINT ["/entrypoint.sh"]
