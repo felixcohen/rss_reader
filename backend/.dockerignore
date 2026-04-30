@@ -1,0 +1,8 @@
+spec/
+tmp/
+db/*.db
+.bundle/
+vendor/
+.rubocop.yml
+Dockerfile
+.rspec
