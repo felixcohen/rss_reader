@@ -1,1 +1,17 @@
 .worktrees/
+
+# Ruby
+backend/.bundle/
+backend/vendor/bundle
+backend/db/*.db
+backend/tmp/
+
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# Env
+.env
+
+# System
+.DS_Store

@@ -1,0 +1,31 @@
+# frozen_string_literal: true
+
+source 'https://rubygems.org'
+ruby '3.2.2'
+
+gem 'sinatra', '~> 3.2'
+gem 'sinatra-contrib', '~> 3.2'
+gem 'puma', '~> 6.4'
+gem 'sequel', '~> 5.80'
+gem 'sqlite3', '~> 2.0'
+gem 'feedjira', '~> 3.2'
+gem 'nokogiri', '~> 1.16'
+gem 'loofah', '~> 2.22'
+gem 'rufus-scheduler', '~> 3.9'
+gem 'rack-cors', '~> 2.0'
+gem 'oj', '~> 3.16'
+
+group :development, :test do
+  gem 'rspec', '~> 3.13'
+  gem 'rack-test', '~> 2.1'
+  gem 'factory_bot', '~> 6.4'
+  gem 'webmock', '~> 3.23'
+  gem 'database_cleaner-sequel', '~> 2.0'
+  gem 'rerun', '~> 0.14'
+end
+
+group :development do
+  gem 'rubocop', '~> 1.65', require: false
+  gem 'rubocop-sequel', '~> 0.3', require: false
+  gem 'rubocop-rspec', '~> 3.0', require: false
+end
