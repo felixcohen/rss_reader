@@ -3,6 +3,7 @@
 require_relative 'app/app'
 require_relative 'app/services/feed_poller'
 require 'rufus-scheduler'
+require 'rack/cors'
 
 use Rack::Cors do
   allow do
