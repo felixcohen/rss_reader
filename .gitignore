@@ -15,3 +15,6 @@ frontend/dist/
 
 # System
 .DS_Store
+
+*.sqlite
+.bundle/

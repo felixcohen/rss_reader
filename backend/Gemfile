@@ -21,11 +21,11 @@ group :development, :test do
   gem 'factory_bot', '~> 6.4'
   gem 'webmock', '~> 3.23'
   gem 'database_cleaner-sequel', '~> 2.0'
-  gem 'rerun', '~> 0.14'
 end
 
 group :development do
   gem 'rubocop', '~> 1.65', require: false
   gem 'rubocop-sequel', '~> 0.3', require: false
   gem 'rubocop-rspec', '~> 3.0', require: false
+  gem 'rerun', '~> 0.14'
 end
