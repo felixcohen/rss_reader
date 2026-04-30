@@ -2,6 +2,7 @@
 
 require_relative '../services/feed_fetcher'
 require_relative '../services/opml_parser'
+require_relative '../services/feed_poller'
 
 module Reader
   class App
@@ -33,6 +34,14 @@ module Reader
 
       feed.destroy
       status 204
+    end
+
+    get '/feeds/:id/refresh' do
+      feed = Feed[params[:id].to_i]
+      halt 404, json(error: 'Not found') unless feed
+
+      FeedPoller.poll_one(feed)
+      json feed.refresh.to_api
     end
 
     # Keep export above any GET /feeds/:id to prevent route shadowing
