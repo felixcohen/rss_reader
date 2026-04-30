@@ -1,0 +1,37 @@
+# frozen_string_literal: true
+
+require 'sequel'
+require 'sequel/extensions/migration'
+
+MIGRATIONS_DIR = File.expand_path('db/migrations', __dir__)
+
+namespace :db do
+  desc 'Run pending migrations'
+  task :migrate do
+    url = ENV.fetch('DATABASE_URL', "sqlite://#{File.expand_path('db/development.db', __dir__)}")
+    Sequel.connect(url) do |db|
+      Sequel::Migrator.run(db, MIGRATIONS_DIR)
+      puts "Migrated #{url}"
+    end
+  end
+
+  desc 'Migrate test database'
+  task :migrate_test do
+    url = "sqlite://#{File.expand_path('db/test.db', __dir__)}"
+    Sequel.connect(url) do |db|
+      Sequel::Migrator.run(db, MIGRATIONS_DIR)
+      puts "Migrated #{url}"
+    end
+  end
+
+  desc 'Drop and recreate development DB'
+  task :reset do
+    path = File.expand_path('db/development.db', __dir__)
+    FileUtils.rm_f(path)
+    Rake::Task['db:migrate'].invoke
+  end
+end
+
+require 'rspec/core/rake_task'
+RSpec::Core::RakeTask.new(:spec)
+task default: :spec
