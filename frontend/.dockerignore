@@ -3,4 +3,3 @@ dist/
 *.test.js
 *.test.jsx
 Dockerfile
-nginx.conf
