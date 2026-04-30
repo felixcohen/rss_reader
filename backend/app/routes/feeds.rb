@@ -46,8 +46,10 @@ module Reader
 
     # Keep export above any GET /feeds/:id to prevent route shadowing
     get '/feeds/export' do
-      status 501
-      json error: 'not implemented'
+      require_relative '../services/opml_exporter'
+      content_type 'text/xml'
+      headers 'Content-Disposition' => 'attachment; filename="feeds.opml"'
+      OpmlExporter.call
     end
 
     post '/feeds/import' do
