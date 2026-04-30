@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0">
+  <head><title>My Feeds</title></head>
+  <body>
+    <outline text="Tech" title="Tech">
+      <outline type="rss" text="Example Blog" title="Example Blog"
+               xmlUrl="https://example.com/feed.xml"
+               htmlUrl="https://example.com"/>
+      <outline type="rss" text="Another Blog" title="Another Blog"
+               xmlUrl="https://another.com/rss"
+               htmlUrl="https://another.com"/>
+    </outline>
+    <outline type="rss" text="Ungrouped Feed" title="Ungrouped Feed"
+             xmlUrl="https://ungrouped.com/feed"
+             htmlUrl="https://ungrouped.com"/>
+  </body>
+</opml>
