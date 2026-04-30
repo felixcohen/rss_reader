@@ -16,13 +16,13 @@ require_relative '../app/models/feed_group_membership'
 
 # Run migrations on test DB before suite
 require 'sequel/extensions/migration'
-Sequel::Migrator.run(DB, File.expand_path('../db/migrations', __dir__))
 
 RSpec.configure do |config|
   config.include Rack::Test::Methods
   config.include FactoryBot::Syntax::Methods
 
   config.before(:suite) do
+    Sequel::Migrator.run(DB, File.expand_path('../db/migrations', __dir__))
     FactoryBot.find_definitions
     DatabaseCleaner[:sequel, { db: DB }].strategy = :transaction
   end

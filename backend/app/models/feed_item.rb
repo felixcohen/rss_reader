@@ -21,7 +21,7 @@ class FeedItem < Sequel::Model
       summary: summary,
       author: author,
       published_at: published_at&.iso8601,
-      fetched_at: fetched_at.iso8601,
+      fetched_at: fetched_at&.iso8601,
       is_read: is_read,
       is_starred: is_starred
     }

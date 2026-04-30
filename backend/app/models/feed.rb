@@ -33,7 +33,7 @@ class Feed < Sequel::Model
       last_error: last_error,
       fetch_interval_minutes: fetch_interval_minutes,
       unread_count: unread_count,
-      created_at: created_at.iso8601
+      created_at: created_at&.iso8601
     }
   end
 end

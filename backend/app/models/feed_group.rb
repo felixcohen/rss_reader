@@ -19,7 +19,7 @@ class FeedGroup < Sequel::Model
       id: id,
       name: name,
       feed_ids: feeds_dataset.select_map(:id),
-      created_at: created_at.iso8601
+      created_at: created_at&.iso8601
     }
   end
 end
