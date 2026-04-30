@@ -13,8 +13,6 @@ class OpmlParser
 
   def call
     doc = Nokogiri::XML(@xml_body) { |c| c.strict }
-    return [] if doc.errors.any?
-
     feeds = []
     doc.css('body > outline').each do |node|
       if node['xmlUrl']

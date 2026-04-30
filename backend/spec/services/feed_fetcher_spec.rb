@@ -72,7 +72,7 @@ RSpec.describe FeedFetcher do
     context 'with network timeout' do
       it 'returns error hash' do
         result = FeedFetcher.call('https://timeout.example.com/feed')
-        expect(result[:error]).to be_a(String)
+        expect(result[:error]).to match(/\ATimeout:/)
       end
     end
 

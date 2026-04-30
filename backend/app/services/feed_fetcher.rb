@@ -2,6 +2,7 @@
 
 require 'net/http'
 require 'uri'
+require 'openssl'
 require 'feedjira'
 require 'loofah'
 
@@ -36,6 +37,7 @@ class FeedFetcher
     uri = URI.parse(@url)
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = uri.scheme == 'https'
+    http.verify_mode = OpenSSL::SSL::VERIFY_PEER
     http.open_timeout = TIMEOUT
     http.read_timeout = TIMEOUT
 
@@ -58,7 +60,12 @@ class FeedFetcher
   def upsert_feed(parsed)
     existing = Feed[url: @url]
     if existing
-      existing.update(last_fetched_at: Time.now)
+      existing.update(
+        title: parsed.title&.strip,
+        site_url: parsed.url,
+        description: parsed.description&.strip,
+        last_fetched_at: Time.now
+      )
       return existing
     end
 
@@ -91,7 +98,8 @@ class FeedFetcher
         is_read: false,
         is_starred: false
       )
-    rescue StandardError
+    rescue StandardError => e
+      warn "FeedFetcher: failed to upsert item #{guid.inspect}: #{e.message}"
       next
     end
   end
