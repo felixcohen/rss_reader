@@ -38,6 +38,7 @@ class FeedPoller
       @feed.update(updates)
     end
   rescue StandardError => e
+    warn "FeedPoller: unexpected error polling feed #{@feed.id}: #{e.message}"
     @feed.update(last_error: e.message)
   end
 end
