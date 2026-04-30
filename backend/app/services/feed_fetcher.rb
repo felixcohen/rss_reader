@@ -7,7 +7,7 @@ require 'feedjira'
 require 'loofah'
 
 class FeedFetcher
-  TIMEOUT = 15
+  TIMEOUT = 5
 
   def self.call(url)
     new(url).call

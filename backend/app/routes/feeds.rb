@@ -57,24 +57,29 @@ module Reader
       entries = OpmlParser.call(xml)
       halt 422, json(error: 'Invalid or empty OPML') if entries.empty?
 
+      mutex = Mutex.new
       imported = 0
       errors = []
 
-      entries.each do |entry|
-        result = FeedFetcher.call(entry[:url])
-        if result[:error]
-          errors << { url: entry[:url], error: result[:error] }
-          next
+      entries.map do |entry|
+        Thread.new do
+          result = FeedFetcher.call(entry[:url])
+          mutex.synchronize do
+            if result[:error]
+              errors << { url: entry[:url], error: result[:error] }
+              next
+            end
+
+            imported += 1
+            next unless entry[:group]
+
+            group = FeedGroup.find_or_create(name: entry[:group])
+            DB[:feed_group_memberships]
+              .insert_conflict(:ignore)
+              .insert(feed_id: result[:feed].id, group_id: group.id)
+          end
         end
-
-        imported += 1
-        next unless entry[:group]
-
-        group = FeedGroup.find_or_create(name: entry[:group])
-        DB[:feed_group_memberships]
-          .insert_conflict(:ignore)
-          .insert(feed_id: result[:feed].id, group_id: group.id)
-      end
+      end.each(&:join)
 
       json imported: imported, errors: errors
     end
