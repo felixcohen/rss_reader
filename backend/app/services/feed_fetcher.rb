@@ -80,8 +80,8 @@ class FeedFetcher
 
   def upsert_items(feed, entries)
     entries.each do |entry|
-      guid = entry.entry_id || entry.url
-      next if guid.nil?
+      guid = (entry.entry_id || entry.url)&.to_s
+      next if guid.nil? || guid.empty?
       next if FeedItem[feed_id: feed.id, guid: guid]
 
       content = sanitise(entry.content || entry.summary)
