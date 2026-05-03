@@ -29,4 +29,29 @@ export const api = {
   },
 
   refreshFeed: (id) => req(`/feeds/${id}/refresh`),
+
+  addFeed: (url) =>
+    req('/feeds', { method: 'POST', body: JSON.stringify({ url }) }),
+
+  deleteFeed: (id) =>
+    req(`/feeds/${id}`, { method: 'DELETE' }),
+
+  importOpml: (xmlString) =>
+    req('/feeds/import', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/xml' },
+      body: xmlString,
+    }),
+
+  exportOpml: async () => {
+    const res = await fetch(`${BASE}/feeds/export`)
+    if (!res.ok) throw new Error(`GET /feeds/export → ${res.status}`)
+    const blob = await res.blob()
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'feeds.opml'
+    a.click()
+    URL.revokeObjectURL(url)
+  },
 }

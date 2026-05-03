@@ -8,6 +8,7 @@ import { Sidebar }         from './components/Sidebar'
 import { ItemList }        from './components/ItemList'
 import { ArticlePane }     from './components/ArticlePane'
 import { ShortcutOverlay } from './components/ShortcutOverlay'
+import { AdminPage }       from './components/AdminPage'
 import { api }             from './api'
 
 export default function App() {
@@ -15,6 +16,7 @@ export default function App() {
   const [selectedItem,   setSelectedItem]   = useState(null)
   const [showHelp,       setShowHelp]       = useState(false)
   const [unreadOnly,     setUnreadOnly]     = useState(false)
+  const [showAdmin,      setShowAdmin]      = useState(false)
 
   const { feeds, groups, reload: reloadFeeds, adjustUnreadCount } = useFeeds()
   const { items, loadMore, nextBeforeId, updateItem, reload: reloadItems } = useItems({
@@ -85,6 +87,16 @@ export default function App() {
 
   useKeyboard(handlers)
 
+  if (showAdmin) {
+    return (
+      <AdminPage
+        feeds={feeds}
+        onClose={() => setShowAdmin(false)}
+        onFeedsChanged={reloadFeeds}
+      />
+    )
+  }
+
   return (
     <div className="app">
       <Sidebar
@@ -93,6 +105,7 @@ export default function App() {
         selectedFeedId={selectedFeedId}
         onSelect={(id) => { setSelectedFeedId(id); setSelectedItem(null) }}
         onSelectAll={() => { setSelectedFeedId(null); setSelectedItem(null) }}
+        onAdmin={() => setShowAdmin(true)}
       />
       <ItemList
         items={items}

@@ -1,6 +1,6 @@
 import './Sidebar.css'
 
-export function Sidebar({ feeds, groups, selectedFeedId, onSelect, onSelectAll }) {
+export function Sidebar({ feeds, groups, selectedFeedId, onSelect, onSelectAll, onAdmin }) {
   const feedById = Object.fromEntries(feeds.map((f) => [f.id, f]))
 
   const feedsByGroup = {}
@@ -49,6 +49,8 @@ export function Sidebar({ feeds, groups, selectedFeedId, onSelect, onSelectAll }
       <div className="sidebar-feeds">
         {ungrouped.map((feed) => <FeedButton key={feed.id} feed={feed} />)}
       </div>
+
+      <button className="sidebar-admin-btn" onClick={onAdmin} title="Admin">⚙</button>
     </nav>
   )
 }
