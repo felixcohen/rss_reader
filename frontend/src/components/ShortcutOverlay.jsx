@@ -11,7 +11,7 @@ const SHORTCUTS = [
   ['v', 'Open post in new tab'],
   ['r', 'Refresh feed'],
   ['g a', 'Go to All Items'],
-  ['?', 'Show/hide this overlay'],
+  ['h / ?', 'Show/hide this overlay'],
 ]
 
 export function ShortcutOverlay({ onClose }) {
