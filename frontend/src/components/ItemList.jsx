@@ -1,4 +1,4 @@
-import { useRef, useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import { List, useListRef } from 'react-window'
 import { ItemRow } from './ItemRow'
 import './ItemList.css'
@@ -6,8 +6,16 @@ import './ItemList.css'
 const ROW_HEIGHT = 72
 const EMPTY_ROW_PROPS = {}
 
-export function ItemList({ items, selectedItemId, feeds, onSelect, onLoadMore, hasMore }) {
+export function ItemList({ items, selectedItemId, feeds, onSelect, onLoadMore, hasMore, unreadOnly, onToggleUnreadOnly }) {
   const listRef = useListRef()
+
+  const selectedIndex = items.findIndex((i) => i.id === selectedItemId)
+
+  useEffect(() => {
+    if (selectedIndex >= 0) {
+      listRef.current?.scrollToRow({ index: selectedIndex, align: 'auto' })
+    }
+  }, [selectedIndex])
 
   function feedTitle(feedId) {
     return feeds.find((f) => f.id === feedId)?.title ?? ''
@@ -34,13 +42,21 @@ export function ItemList({ items, selectedItemId, feeds, onSelect, onLoadMore, h
 
   return (
     <div className="item-list">
+      <div className="item-list-toolbar">
+        <button
+          className={`unread-toggle ${unreadOnly ? 'active' : ''}`}
+          onClick={onToggleUnreadOnly}
+        >
+          Unread only
+        </button>
+      </div>
       <List
         listRef={listRef}
         rowCount={items.length + (hasMore ? 1 : 0)}
         rowHeight={ROW_HEIGHT}
         rowComponent={RowComponent}
         rowProps={EMPTY_ROW_PROPS}
-        style={{ height: '100%' }}
+        style={{ height: 'calc(100% - 36px)' }}
       />
     </div>
   )

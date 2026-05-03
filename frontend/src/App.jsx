@@ -14,12 +14,13 @@ export default function App() {
   const [selectedFeedId, setSelectedFeedId] = useState(null)
   const [selectedItem,   setSelectedItem]   = useState(null)
   const [showHelp,       setShowHelp]       = useState(false)
+  const [unreadOnly,     setUnreadOnly]     = useState(false)
 
   const { feeds, groups, reload: reloadFeeds } = useFeeds()
   const { items, loadMore, nextBeforeId, updateItem, reload: reloadItems } = useItems({
     feedId: selectedFeedId,
     groupId: null,
-    unreadOnly: false,
+    unreadOnly,
   })
 
   const { enqueue: enqueueRead } = useReadQueue()
@@ -95,6 +96,8 @@ export default function App() {
         onSelect={selectItem}
         onLoadMore={loadMore}
         hasMore={!!nextBeforeId}
+        unreadOnly={unreadOnly}
+        onToggleUnreadOnly={() => setUnreadOnly((v) => !v)}
       />
       <ArticlePane item={selectedItem} />
       {showHelp && <ShortcutOverlay onClose={() => setShowHelp(false)} />}
