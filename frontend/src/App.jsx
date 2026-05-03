@@ -98,6 +98,9 @@ export default function App() {
         hasMore={!!nextBeforeId}
         unreadOnly={unreadOnly}
         onToggleUnreadOnly={() => setUnreadOnly((v) => !v)}
+        unreadCount={selectedFeedId
+          ? (feeds.find((f) => f.id === selectedFeedId)?.unread_count ?? 0)
+          : feeds.reduce((sum, f) => sum + (f.unread_count ?? 0), 0)}
       />
       <ArticlePane item={selectedItem} />
       {showHelp && <ShortcutOverlay onClose={() => setShowHelp(false)} />}

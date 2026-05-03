@@ -6,7 +6,7 @@ import './ItemList.css'
 const ROW_HEIGHT = 72
 const EMPTY_ROW_PROPS = {}
 
-export function ItemList({ items, selectedItemId, feeds, onSelect, onLoadMore, hasMore, unreadOnly, onToggleUnreadOnly }) {
+export function ItemList({ items, selectedItemId, feeds, onSelect, onLoadMore, hasMore, unreadOnly, onToggleUnreadOnly, unreadCount }) {
   const listRef = useListRef()
 
   const selectedIndex = items.findIndex((i) => i.id === selectedItemId)
@@ -56,8 +56,11 @@ export function ItemList({ items, selectedItemId, feeds, onSelect, onLoadMore, h
         rowHeight={ROW_HEIGHT}
         rowComponent={RowComponent}
         rowProps={EMPTY_ROW_PROPS}
-        style={{ height: 'calc(100% - 36px)' }}
+        style={{ height: 'calc(100% - 36px - 32px)' }}
       />
+      <div className="item-list-footer">
+        {unreadCount} unread
+      </div>
     </div>
   )
 }
