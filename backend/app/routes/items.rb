@@ -10,7 +10,8 @@ module Reader
       before_id = params[:before_id]&.to_i
       feed_id   = params[:feed_id]&.to_i
       group_id  = params[:group_id]&.to_i
-      unread    = params[:unread_only] == 'true'
+      unread    = params[:unread_only]  == 'true'
+      starred   = params[:starred_only] == 'true'
 
       ds = FeedItem.order(Sequel.desc(:published_at), Sequel.desc(:id))
 
@@ -21,7 +22,8 @@ module Reader
         ds = ds.where(feed_id: feed_id)
       end
 
-      ds = ds.where(is_read: false) if unread
+      ds = ds.where(is_read: false)    if unread
+      ds = ds.where(is_starred: true)  if starred
       ds = ds.where { id < before_id } if before_id && before_id > 0
 
       items    = ds.limit(limit + 1).all

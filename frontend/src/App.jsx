@@ -19,12 +19,14 @@ export default function App() {
   const [unreadOnly,      setUnreadOnly]      = useState(false)
   const [showAdmin,       setShowAdmin]       = useState(false)
   const [showMarkAllRead, setShowMarkAllRead] = useState(false)
+  const [starredOnly,     setStarredOnly]     = useState(false)
 
   const { feeds, groups, error: feedsError, reload: reloadFeeds, adjustUnreadCount } = useFeeds()
   const { items, loadMore, nextBeforeId, error: itemsError, updateItem, reload: reloadItems } = useItems({
-    feedId: selectedFeedId,
+    feedId: starredOnly ? null : selectedFeedId,
     groupId: null,
-    unreadOnly,
+    unreadOnly: starredOnly ? false : unreadOnly,
+    starredOnly,
   })
 
   const { enqueue: enqueueRead } = useReadQueue()
@@ -85,7 +87,7 @@ export default function App() {
       await reloadFeeds()
       reloadItems()
     },
-    onGoAll:  () => { setSelectedFeedId(null); setSelectedItem(null) },
+    onGoAll:  () => { setSelectedFeedId(null); setSelectedItem(null); setStarredOnly(false) },
     onHelp:   () => setShowHelp((v) => !v),
     onSpace: () => {
       const pane = document.querySelector('.article-pane')
@@ -123,8 +125,10 @@ export default function App() {
         feeds={feeds}
         groups={groups}
         selectedFeedId={selectedFeedId}
-        onSelect={(id) => { setSelectedFeedId(id); setSelectedItem(null) }}
-        onSelectAll={() => { setSelectedFeedId(null); setSelectedItem(null) }}
+        onSelect={(id) => { setSelectedFeedId(id); setSelectedItem(null); setStarredOnly(false) }}
+        onSelectAll={() => { setSelectedFeedId(null); setSelectedItem(null); setStarredOnly(false) }}
+        onSelectStarred={() => { setSelectedFeedId(null); setSelectedItem(null); setStarredOnly(true) }}
+        starredOnly={starredOnly}
         onAdmin={() => setShowAdmin(true)}
       />
       <ItemList

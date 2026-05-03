@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { api } from '../api'
 
-export function useItems({ feedId, groupId, unreadOnly }) {
+export function useItems({ feedId, groupId, unreadOnly, starredOnly }) {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(false)
   const [nextBeforeId, setNextBeforeId] = useState(null)
@@ -12,9 +12,10 @@ export function useItems({ feedId, groupId, unreadOnly }) {
     setLoading(true)
     try {
       const params = { limit: 50 }
-      if (feedId)     params.feed_id    = feedId
-      if (groupId)    params.group_id   = groupId
-      if (unreadOnly) params.unread_only = true
+      if (feedId)     params.feed_id     = feedId
+      if (groupId)    params.group_id    = groupId
+      if (unreadOnly) params.unread_only  = true
+      if (starredOnly) params.starred_only = true
 
       const data = await api.getItems(params)
       setItems(replace ? data.items : (prev) => [...prev, ...data.items])
@@ -28,7 +29,7 @@ export function useItems({ feedId, groupId, unreadOnly }) {
     } finally {
       setLoading(false)
     }
-  }, [feedId, groupId, unreadOnly])
+  }, [feedId, groupId, unreadOnly, starredOnly])
 
   const loadMore = useCallback(async () => {
     if (!nextBeforeId) return
@@ -40,7 +41,8 @@ export function useItems({ feedId, groupId, unreadOnly }) {
       before_id: nextBeforeId,
       ...(feedId     ? { feed_id:    feedId }    : {}),
       ...(groupId    ? { group_id:   groupId }   : {}),
-      ...(unreadOnly ? { unread_only: true }     : {}),
+      ...(unreadOnly  ? { unread_only:  true } : {}),
+      ...(starredOnly ? { starred_only: true } : {}),
     })
     setItems((prev) => [...prev, ...data.items])
     setNextBeforeId(data.next_before_id)

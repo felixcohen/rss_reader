@@ -1,6 +1,6 @@
 import './Sidebar.css'
 
-export function Sidebar({ feeds, groups, selectedFeedId, onSelect, onSelectAll, onAdmin }) {
+export function Sidebar({ feeds, groups, selectedFeedId, onSelect, onSelectAll, onSelectStarred, starredOnly, onAdmin }) {
   const feedById = Object.fromEntries(feeds.map((f) => [f.id, f]))
 
   const feedsByGroup = {}
@@ -31,7 +31,7 @@ export function Sidebar({ feeds, groups, selectedFeedId, onSelect, onSelectAll, 
   return (
     <nav className="sidebar">
       <button
-        className={`sidebar-item sidebar-all ${!selectedFeedId ? 'selected' : ''}`}
+        className={`sidebar-item sidebar-all ${!selectedFeedId && !starredOnly ? 'selected' : ''}`}
         onClick={onSelectAll}
       >
         All Items
@@ -49,6 +49,14 @@ export function Sidebar({ feeds, groups, selectedFeedId, onSelect, onSelectAll, 
       <div className="sidebar-feeds">
         {ungrouped.map((feed) => <FeedButton key={feed.id} feed={feed} />)}
       </div>
+
+      <div className="sidebar-divider" />
+      <button
+        className={`sidebar-item sidebar-starred ${starredOnly ? 'selected' : ''}`}
+        onClick={onSelectStarred}
+      >
+        ★ Starred
+      </button>
 
       <button className="sidebar-admin-btn" onClick={onAdmin} title="Admin">⚙</button>
     </nav>
