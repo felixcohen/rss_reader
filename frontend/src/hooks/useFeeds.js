@@ -15,5 +15,11 @@ export function useFeeds() {
 
   useEffect(() => { load() }, [load])
 
-  return { feeds, groups, loading, reload: load }
+  function adjustUnreadCount(feedId, delta) {
+    setFeeds((prev) => prev.map((f) =>
+      f.id === feedId ? { ...f, unread_count: Math.max(0, (f.unread_count ?? 0) + delta) } : f
+    ))
+  }
+
+  return { feeds, groups, loading, reload: load, adjustUnreadCount }
 }

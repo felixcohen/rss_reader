@@ -16,7 +16,7 @@ export default function App() {
   const [showHelp,       setShowHelp]       = useState(false)
   const [unreadOnly,     setUnreadOnly]     = useState(false)
 
-  const { feeds, groups, reload: reloadFeeds } = useFeeds()
+  const { feeds, groups, reload: reloadFeeds, adjustUnreadCount } = useFeeds()
   const { items, loadMore, nextBeforeId, updateItem, reload: reloadItems } = useItems({
     feedId: selectedFeedId,
     groupId: null,
@@ -32,8 +32,9 @@ export default function App() {
     if (item && !item.is_read) {
       updateItem(item.id, { is_read: true })
       enqueueRead(item.id)
+      adjustUnreadCount(item.feed_id, -1)
     }
-  }, [updateItem, enqueueRead])
+  }, [updateItem, enqueueRead, adjustUnreadCount])
 
   const handlers = {
     onNext: () => {
@@ -49,6 +50,7 @@ export default function App() {
       const updated = await api.patchItem(selectedItem.id, { is_read: !selectedItem.is_read })
       updateItem(selectedItem.id, { is_read: updated.is_read })
       setSelectedItem((prev) => ({ ...prev, is_read: updated.is_read }))
+      adjustUnreadCount(selectedItem.feed_id, updated.is_read ? -1 : 1)
     },
     onToggleStar: async () => {
       if (!selectedItem) return
