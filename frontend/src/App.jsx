@@ -58,6 +58,9 @@ export default function App() {
       updateItem(selectedItem.id, { is_starred: updated.is_starred })
       setSelectedItem((prev) => ({ ...prev, is_starred: updated.is_starred }))
     },
+    onOpen: () => {
+      if (selectedItem?.url) window.open(selectedItem.url, '_blank', 'noopener')
+    },
     onRefresh: async () => {
       if (!selectedFeedId) return
       await api.refreshFeed(selectedFeedId)

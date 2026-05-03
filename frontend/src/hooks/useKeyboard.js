@@ -22,6 +22,7 @@ export function useKeyboard(handlers) {
         case 'm':  h.onToggleRead?.(); break
         case 's':  h.onToggleStar?.(); break
         case 'r':  h.onRefresh?.();    break
+        case 'v':  h.onOpen?.();       break
         case '?':  h.onHelp?.();       break
         case 'g':  pendingG.current = true; break
         case ' ':

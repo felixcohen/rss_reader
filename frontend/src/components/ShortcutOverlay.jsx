@@ -7,6 +7,7 @@ const SHORTCUTS = [
   ['Shift+Space', 'Page up'],
   ['m', 'Toggle read/unread'],
   ['s', 'Toggle star'],
+  ['v', 'Open post in new tab'],
   ['r', 'Refresh feed'],
   ['g a', 'Go to All Items'],
   ['?', 'Show/hide this overlay'],
