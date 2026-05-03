@@ -9,17 +9,19 @@ import { ItemList }        from './components/ItemList'
 import { ArticlePane }     from './components/ArticlePane'
 import { ShortcutOverlay } from './components/ShortcutOverlay'
 import { AdminPage }       from './components/AdminPage'
+import { Modal }           from './components/Modal'
 import { api }             from './api'
 
 export default function App() {
-  const [selectedFeedId, setSelectedFeedId] = useState(null)
-  const [selectedItem,   setSelectedItem]   = useState(null)
-  const [showHelp,       setShowHelp]       = useState(false)
-  const [unreadOnly,     setUnreadOnly]     = useState(false)
-  const [showAdmin,      setShowAdmin]      = useState(false)
+  const [selectedFeedId,  setSelectedFeedId]  = useState(null)
+  const [selectedItem,    setSelectedItem]    = useState(null)
+  const [showHelp,        setShowHelp]        = useState(false)
+  const [unreadOnly,      setUnreadOnly]      = useState(false)
+  const [showAdmin,       setShowAdmin]       = useState(false)
+  const [showMarkAllRead, setShowMarkAllRead] = useState(false)
 
-  const { feeds, groups, reload: reloadFeeds, adjustUnreadCount } = useFeeds()
-  const { items, loadMore, nextBeforeId, updateItem, reload: reloadItems } = useItems({
+  const { feeds, groups, error: feedsError, reload: reloadFeeds, adjustUnreadCount } = useFeeds()
+  const { items, loadMore, nextBeforeId, error: itemsError, updateItem, reload: reloadItems } = useItems({
     feedId: selectedFeedId,
     groupId: null,
     unreadOnly,
@@ -38,6 +40,19 @@ export default function App() {
     }
   }, [updateItem, enqueueRead, adjustUnreadCount])
 
+  async function confirmMarkAllRead() {
+    const params = selectedFeedId ? { feed_id: selectedFeedId } : {}
+    await api.markAllRead(params)
+    if (selectedFeedId) {
+      adjustUnreadCount(selectedFeedId, -Infinity)
+    } else {
+      feeds.forEach((f) => adjustUnreadCount(f.id, -Infinity))
+    }
+    setSelectedItem(null)
+    reloadItems()
+    setShowMarkAllRead(false)
+  }
+
   const handlers = {
     onNext: () => {
       const next = items[selectedIndex + 1]
@@ -47,6 +62,7 @@ export default function App() {
       const prev = items[selectedIndex - 1]
       if (prev) selectItem(prev)
     },
+    onMarkAllRead: () => setShowMarkAllRead(true),
     onToggleRead: async () => {
       if (!selectedItem) return
       const updated = await api.patchItem(selectedItem.id, { is_read: !selectedItem.is_read })
@@ -87,6 +103,8 @@ export default function App() {
 
   useKeyboard(handlers)
 
+  const backendError = feedsError || itemsError
+
   if (showAdmin) {
     return (
       <AdminPage
@@ -96,6 +114,8 @@ export default function App() {
       />
     )
   }
+
+  const selectedFeedTitle = feeds.find((f) => f.id === selectedFeedId)?.title
 
   return (
     <div className="app">
@@ -121,7 +141,32 @@ export default function App() {
           : feeds.reduce((sum, f) => sum + (f.unread_count ?? 0), 0)}
       />
       <ArticlePane item={selectedItem} />
+
       {showHelp && <ShortcutOverlay onClose={() => setShowHelp(false)} />}
+
+      {showMarkAllRead && (
+        <Modal
+          title="Mark all as read?"
+          message={selectedFeedTitle
+            ? `This will mark every item in "${selectedFeedTitle}" as read.`
+            : 'This will mark every item across all feeds as read.'}
+          actions={[
+            { label: 'Cancel',       variant: '',        onClick: () => setShowMarkAllRead(false) },
+            { label: 'Mark all read', variant: 'primary', onClick: confirmMarkAllRead },
+          ]}
+          onClose={() => setShowMarkAllRead(false)}
+        />
+      )}
+
+      {backendError && (
+        <Modal
+          title="Unable to reach the server"
+          message="The app lost connection to the backend. Please restart the app and try again."
+          actions={[
+            { label: 'Restart app', variant: 'primary', onClick: () => window.location.reload() },
+          ]}
+        />
+      )}
     </div>
   )
 }

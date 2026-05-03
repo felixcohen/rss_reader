@@ -5,22 +5,28 @@ export function useItems({ feedId, groupId, unreadOnly }) {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(false)
   const [nextBeforeId, setNextBeforeId] = useState(null)
+  const [error, setError] = useState(null)
   const prefetchRef = useRef(null)
 
   const load = useCallback(async (replace = true) => {
     setLoading(true)
-    const params = { limit: 50 }
-    if (feedId)     params.feed_id    = feedId
-    if (groupId)    params.group_id   = groupId
-    if (unreadOnly) params.unread_only = true
+    try {
+      const params = { limit: 50 }
+      if (feedId)     params.feed_id    = feedId
+      if (groupId)    params.group_id   = groupId
+      if (unreadOnly) params.unread_only = true
 
-    const data = await api.getItems(params)
-    setItems(replace ? data.items : (prev) => [...prev, ...data.items])
-    setNextBeforeId(data.next_before_id)
-    setLoading(false)
+      const data = await api.getItems(params)
+      setItems(replace ? data.items : (prev) => [...prev, ...data.items])
+      setNextBeforeId(data.next_before_id)
 
-    if (data.next_before_id) {
-      prefetchRef.current = api.getItems({ ...params, before_id: data.next_before_id })
+      if (data.next_before_id) {
+        prefetchRef.current = api.getItems({ ...params, before_id: data.next_before_id })
+      }
+    } catch (e) {
+      setError(e)
+    } finally {
+      setLoading(false)
     }
   }, [feedId, groupId, unreadOnly])
 
@@ -46,5 +52,5 @@ export function useItems({ feedId, groupId, unreadOnly }) {
     setItems((prev) => prev.map((item) => item.id === id ? { ...item, ...updates } : item))
   }
 
-  return { items, loading, nextBeforeId, loadMore, updateItem, reload: () => load(true) }
+  return { items, loading, error, nextBeforeId, loadMore, updateItem, reload: () => load(true) }
 }

@@ -17,9 +17,10 @@ export function useKeyboard(handlers) {
       }
 
       switch (e.key) {
-        case 'j':  h.onNext?.();       break
-        case 'k':  h.onPrev?.();       break
-        case 'm':  h.onToggleRead?.(); break
+        case 'j':  h.onNext?.();        break
+        case 'k':  h.onPrev?.();        break
+        case 'a':  h.onMarkAllRead?.(); break
+        case 'm':  h.onToggleRead?.();  break
         case 's':  h.onToggleStar?.(); break
         case 'r':  h.onRefresh?.();    break
         case 'v':  h.onOpen?.();       break

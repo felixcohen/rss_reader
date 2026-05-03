@@ -5,6 +5,7 @@ const SHORTCUTS = [
   ['k', 'Previous item'],
   ['Space', 'Page down / next item'],
   ['Shift+Space', 'Page up'],
+  ['a', 'Mark all as read'],
   ['m', 'Toggle read/unread'],
   ['s', 'Toggle star'],
   ['v', 'Open post in new tab'],
