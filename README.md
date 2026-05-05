@@ -22,6 +22,10 @@ curl -X POST http://localhost:8080/api/feeds/import \
   --data-binary @my-feeds.opml
 ```
 
+## Admin / feed management
+
+Click the ⚙ button at the bottom of the sidebar to open the admin page. From there you can add and remove feeds, manage folders, and import/export OPML.
+
 ## Backup
 
 The database is a single SQLite file inside a named Docker volume (`db_data`). To back it up:
