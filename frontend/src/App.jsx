@@ -12,6 +12,8 @@ import { AdminPage }       from './components/AdminPage'
 import { Modal }           from './components/Modal'
 import { api }             from './api'
 
+const SIDEBAR_WIDTH = 240 // must match .sidebar { width } in Sidebar.css
+
 function DragHandle({ onMouseDown }) {
   return <div className="drag-handle" onMouseDown={onMouseDown} />
 }
@@ -26,24 +28,24 @@ export default function App() {
   const [starredOnly,     setStarredOnly]     = useState(false)
   const [itemListWidth,   setItemListWidth]   = useState(360)
 
-  const SIDEBAR_WIDTH = 240 // must match .sidebar { width } in Sidebar.css
-
-  function startDrag(e) {
+  const startDrag = useCallback(function startDrag(e) {
     document.body.style.userSelect = 'none'
-    document.querySelector('.article-pane').style.pointerEvents = 'none'
+    const pane = document.querySelector('.article-pane')
+    if (pane) pane.style.pointerEvents = 'none'
 
     function onMove(e) {
       setItemListWidth(Math.max(200, Math.min(600, e.clientX - SIDEBAR_WIDTH)))
     }
     function onUp() {
       document.body.style.userSelect = ''
-      document.querySelector('.article-pane').style.pointerEvents = ''
+      const pane = document.querySelector('.article-pane')
+      if (pane) pane.style.pointerEvents = ''
       window.removeEventListener('mousemove', onMove)
       window.removeEventListener('mouseup', onUp)
     }
     window.addEventListener('mousemove', onMove)
     window.addEventListener('mouseup', onUp)
-  }
+  }, [])
 
   const { feeds, groups, error: feedsError, reload: reloadFeeds, adjustUnreadCount } = useFeeds()
   const { items, loadMore, nextBeforeId, error: itemsError, updateItem, reload: reloadItems } = useItems({
