@@ -6,7 +6,7 @@ import './ItemList.css'
 const ROW_HEIGHT = 72
 const EMPTY_ROW_PROPS = {}
 
-export function ItemList({ items, selectedItemId, feeds, onSelect, onLoadMore, hasMore, unreadOnly, onToggleUnreadOnly, unreadCount }) {
+export function ItemList({ items, selectedItemId, feeds, onSelect, onLoadMore, hasMore, unreadOnly, onToggleUnreadOnly, unreadCount, style }) {
   const listRef = useListRef()
 
   const selectedIndex = items.findIndex((i) => i.id === selectedItemId)
@@ -41,7 +41,7 @@ export function ItemList({ items, selectedItemId, feeds, onSelect, onLoadMore, h
   }, [items, selectedItemId, feeds, onSelect, onLoadMore, hasMore])
 
   return (
-    <div className="item-list">
+    <div className="item-list" style={style}>
       <div className="item-list-toolbar">
         <button
           className={`unread-toggle ${unreadOnly ? 'active' : ''}`}

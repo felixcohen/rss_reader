@@ -1,4 +1,4 @@
-.item-list { flex: 1; overflow: hidden; background: #fff; border-right: 1px solid #ddd; display: flex; flex-direction: column; }
+.item-list { flex: none; height: 100%; overflow: hidden; background: #fff; display: flex; flex-direction: column; }
 
 .item-list-toolbar { height: 36px; display: flex; align-items: center; padding: 0 10px; border-bottom: 1px solid #eee; flex-shrink: 0; }
 
