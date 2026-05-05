@@ -12,7 +12,7 @@ import { AdminPage }       from './components/AdminPage'
 import { Modal }           from './components/Modal'
 import { api }             from './api'
 
-const SIDEBAR_WIDTH = 240 // must match .sidebar { width } in Sidebar.css
+const SIDEBAR_WIDTH = 240 // fallback if .sidebar is not in the DOM
 
 function DragHandle({ onMouseDown }) {
   return <div className="drag-handle" onMouseDown={onMouseDown} />
@@ -29,16 +29,18 @@ export default function App() {
   const [itemListWidth,   setItemListWidth]   = useState(360)
 
   const startDrag = useCallback(function startDrag(e) {
+    e.preventDefault()
     document.body.style.userSelect = 'none'
     const pane = document.querySelector('.article-pane')
     if (pane) pane.style.pointerEvents = 'none'
+    const sidebar = document.querySelector('.sidebar')
+    const sidebarRight = sidebar ? sidebar.getBoundingClientRect().right : SIDEBAR_WIDTH
 
     function onMove(e) {
-      setItemListWidth(Math.max(200, Math.min(600, e.clientX - SIDEBAR_WIDTH)))
+      setItemListWidth(Math.max(200, Math.min(600, e.clientX - sidebarRight)))
     }
     function onUp() {
       document.body.style.userSelect = ''
-      const pane = document.querySelector('.article-pane')
       if (pane) pane.style.pointerEvents = ''
       window.removeEventListener('mousemove', onMove)
       window.removeEventListener('mouseup', onUp)
