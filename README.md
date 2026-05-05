@@ -11,13 +11,13 @@ cp .env.example .env          # edit SECRET_KEY at minimum
 docker compose up
 ```
 
-Open http://localhost
+Open http://localhost:8080
 
 ## Import feeds (OPML)
 
 Via curl:
 ```bash
-curl -X POST http://localhost/api/feeds/import \
+curl -X POST http://localhost:8080/api/feeds/import \
   -H 'Content-Type: text/xml' \
   --data-binary @my-feeds.opml
 ```
