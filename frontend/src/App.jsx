@@ -12,6 +12,10 @@ import { AdminPage }       from './components/AdminPage'
 import { Modal }           from './components/Modal'
 import { api }             from './api'
 
+function DragHandle({ onMouseDown }) {
+  return <div className="drag-handle" onMouseDown={onMouseDown} />
+}
+
 export default function App() {
   const [selectedFeedId,  setSelectedFeedId]  = useState(null)
   const [selectedItem,    setSelectedItem]    = useState(null)
@@ -20,6 +24,26 @@ export default function App() {
   const [showAdmin,       setShowAdmin]       = useState(false)
   const [showMarkAllRead, setShowMarkAllRead] = useState(false)
   const [starredOnly,     setStarredOnly]     = useState(false)
+  const [itemListWidth,   setItemListWidth]   = useState(360)
+
+  const SIDEBAR_WIDTH = 240 // must match .sidebar { width } in Sidebar.css
+
+  function startDrag(e) {
+    document.body.style.userSelect = 'none'
+    document.querySelector('.article-pane').style.pointerEvents = 'none'
+
+    function onMove(e) {
+      setItemListWidth(Math.max(200, Math.min(600, e.clientX - SIDEBAR_WIDTH)))
+    }
+    function onUp() {
+      document.body.style.userSelect = ''
+      document.querySelector('.article-pane').style.pointerEvents = ''
+      window.removeEventListener('mousemove', onMove)
+      window.removeEventListener('mouseup', onUp)
+    }
+    window.addEventListener('mousemove', onMove)
+    window.addEventListener('mouseup', onUp)
+  }
 
   const { feeds, groups, error: feedsError, reload: reloadFeeds, adjustUnreadCount } = useFeeds()
   const { items, loadMore, nextBeforeId, error: itemsError, updateItem, reload: reloadItems } = useItems({
@@ -143,7 +167,9 @@ export default function App() {
         unreadCount={selectedFeedId
           ? (feeds.find((f) => f.id === selectedFeedId)?.unread_count ?? 0)
           : feeds.reduce((sum, f) => sum + (f.unread_count ?? 0), 0)}
+        style={{ width: itemListWidth }}
       />
+      <DragHandle onMouseDown={startDrag} />
       <ArticlePane item={selectedItem} />
 
       {showHelp && <ShortcutOverlay onClose={() => setShowHelp(false)} />}
