@@ -65,8 +65,8 @@
   background: transparent;
   cursor: pointer;
   font-size: 16px;
-  color: #999;
+  color: #555;
   text-align: left;
   border-top: 1px solid #ddd;
 }
-.sidebar-admin-btn:hover { color: #333; background: #e8e8e8; }
+.sidebar-admin-btn:hover { color: #111; background: #e8e8e8; }
