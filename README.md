@@ -41,9 +41,11 @@ docker run --rm -v reader_db_data:/data -v $(pwd):/backup alpine \
 | `Shift+Space` | Page up |
 | `m` | Toggle read/unread |
 | `s` | Toggle star |
+| `v` | Open item URL in new tab |
+| `a` | Mark all read (with confirmation) |
 | `r` | Refresh selected feed |
 | `g a` | Go to All Items |
-| `?` | Show/hide shortcut overlay |
+| `?` / `h` | Show/hide shortcut overlay |
 
 ## Development mode
 
