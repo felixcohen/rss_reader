@@ -1,3 +1,4 @@
+import React from 'react'
 import './Sidebar.css'
 
 export function Sidebar({ feeds, groups, selectedFeedId, onSelect, onSelectAll, onSelectStarred, starredOnly, onAdmin }) {

@@ -11,15 +11,17 @@ describe('useKeyboard', () => {
 
   beforeEach(() => {
     handlers = {
-      onNext:       vi.fn(),
-      onPrev:       vi.fn(),
-      onToggleRead: vi.fn(),
-      onToggleStar: vi.fn(),
-      onRefresh:    vi.fn(),
-      onGoAll:      vi.fn(),
-      onHelp:       vi.fn(),
-      onSpace:      vi.fn(),
-      onShiftSpace: vi.fn(),
+      onNext:        vi.fn(),
+      onPrev:        vi.fn(),
+      onMarkAllRead: vi.fn(),
+      onToggleRead:  vi.fn(),
+      onToggleStar:  vi.fn(),
+      onRefresh:     vi.fn(),
+      onOpen:        vi.fn(),
+      onGoAll:       vi.fn(),
+      onHelp:        vi.fn(),
+      onSpace:       vi.fn(),
+      onShiftSpace:  vi.fn(),
     }
   })
 
@@ -59,9 +61,36 @@ describe('useKeyboard', () => {
     expect(handlers.onGoAll).not.toHaveBeenCalled()
   })
 
+  it('calls onMarkAllRead on a', () => {
+    renderHook(() => useKeyboard(handlers))
+    act(() => fireKey('a'))
+    expect(handlers.onMarkAllRead).toHaveBeenCalledTimes(1)
+  })
+
+  it('calls onOpen on v', () => {
+    renderHook(() => useKeyboard(handlers))
+    act(() => fireKey('v'))
+    expect(handlers.onOpen).toHaveBeenCalledTimes(1)
+  })
+
   it('calls onHelp on ?', () => {
     renderHook(() => useKeyboard(handlers))
     act(() => fireKey('?'))
     expect(handlers.onHelp).toHaveBeenCalledTimes(1)
+  })
+
+  it('calls onHelp on h', () => {
+    renderHook(() => useKeyboard(handlers))
+    act(() => fireKey('h'))
+    expect(handlers.onHelp).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not fire when key pressed inside an input', () => {
+    renderHook(() => useKeyboard(handlers))
+    const input = document.createElement('input')
+    document.body.appendChild(input)
+    act(() => input.dispatchEvent(new KeyboardEvent('keydown', { key: 'j', bubbles: true })))
+    expect(handlers.onNext).not.toHaveBeenCalled()
+    document.body.removeChild(input)
   })
 })

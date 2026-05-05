@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import React, { memo } from 'react'
 
 export const ItemRow = memo(function ItemRow({ item, isSelected, feedTitle, style, onClick }) {
   const date = item.published_at
